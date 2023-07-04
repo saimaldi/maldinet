@@ -25,7 +25,7 @@ namespace MaldiNetTests
         {
             RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
             connectionParameters.VirtualHost = "lt2";
-            connectionParameters.Host = "192.168.57.237";
+            connectionParameters.Host = "elimaldidev";
             connectionParameters.Username = "SAI";
             connectionParameters.Password = "LT2";
             connectionParameters.ExchangeName = "LaserToF";
@@ -44,13 +44,16 @@ namespace MaldiNetTests
 
             RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
             connectionParameters.VirtualHost = "lt2";
-            connectionParameters.Host = "192.168.57.237";
+            connectionParameters.Host = "elimaldidev";
             connectionParameters.Username = "SAI";
             connectionParameters.Password = "LT2";
             connectionParameters.ExchangeName = "LaserToF";
+            connectionParameters.VirtualHost = "lt2";
 
             RabbitMQConnection connection = new RabbitMQConnection();
+           
             connection.Connect(connectionParameters, true);
+           
             connection.SubscribeToNewMessages((object sender, RabbitMQMessageEventArgs x) => { messages.Add(x); }) ;
             Thread.Sleep(10000);
             Assert.IsTrue(connection.isConnected());

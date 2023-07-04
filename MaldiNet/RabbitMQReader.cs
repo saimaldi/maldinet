@@ -172,20 +172,26 @@ namespace MaldiNet
             }
 
             model = connection.CreateModel();
-            model.ExchangeDeclare(serverDetails.ExchangeName, "fanout");
+            model.ExchangeDeclare(serverDetails.ExchangeName, ExchangeType.Fanout);
+            
 
             if (consume)
             {
                 
-                model.QueueDeclare(queue: "",
+                 model.QueueDeclare(queue: "",
                                  durable: false,
                                  exclusive: false,
                                  autoDelete: false,
                                  arguments: null);
+                
+
+                model.QueueBind("", serverDetails.ExchangeName, "",null);
+
                 EventingBasicConsumer consumer = new EventingBasicConsumer(model);
                 consumer.Received += Consumer_Received;
  
-                model.BasicConsume(queueName, false, consumer);
+                var result = model.BasicConsume(queueName, false, consumer);
+            
             }
         }
 
