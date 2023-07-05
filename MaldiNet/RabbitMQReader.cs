@@ -148,6 +148,15 @@ namespace MaldiNet
         string queueName = "";
 
 
+        public bool SendMessage(string ThisMessage)
+        {
+            if (!model.IsOpen)
+                return false;
+
+            byte[] messageBodyBytes = System.Text.Encoding.UTF8.GetBytes(ThisMessage);
+            model.BasicPublish(serverDetails.ExchangeName, "", null, messageBodyBytes);
+            return true;
+        }
 
         public void Connect(RabbitMQConnectionDetails serverDetails, bool consume)
         {

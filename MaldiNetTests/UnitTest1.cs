@@ -59,5 +59,48 @@ namespace MaldiNetTests
             Assert.IsTrue(connection.isConnected());
             Assert.IsTrue(messages.Count > 0);
         }
+
+        [Test]
+        public void CanSendConmmandMessages()
+        {
+            List<RabbitMQMessageEventArgs> messages = new List<RabbitMQMessageEventArgs>();
+
+            RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
+            connectionParameters.VirtualHost = "lt2";
+            connectionParameters.Host = "elimaldidev";
+            connectionParameters.Username = "SAI";
+            connectionParameters.Password = "LT2";
+            connectionParameters.ExchangeName = "LaserToF";
+            connectionParameters.VirtualHost = "lt2";
+
+            
+
+            RabbitMQConnection Receiverconnection = new RabbitMQConnection();
+
+            Receiverconnection.Connect(connectionParameters, true);
+
+            Receiverconnection.SubscribeToNewMessages((object sender, RabbitMQMessageEventArgs x) => { messages.Add(x); });
+
+            
+            RabbitMQConnection Senderconnection = new RabbitMQConnection();
+            connectionParameters.ExchangeName = "LaserToFCommand";
+            Senderconnection.Connect(connectionParameters, false);
+
+            Assert.IsTrue( Senderconnection.SendMessage("SET TIMING GATE DELAY 2000 ns"));
+
+            Assert.IsTrue(Receiverconnection.isConnected());
+            Assert.IsTrue(messages.Count > 0);
+            Receiverconnection.Disconnect();
+            bool message_found = false;
+            foreach (var x in messages)
+            {
+                string update = x.Message.ToUpper();
+                if (update.Equals("TIMING GATE DELAY 2000 NS"))
+                {
+                    message_found = true;
+                }
+            }
+            Assert.IsTrue(message_found);
+        }
     }
 }
