@@ -43,13 +43,8 @@ namespace MaldiNetTests
             List<RabbitMQMessageEventArgs> messages = new List<RabbitMQMessageEventArgs>();
 
             RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
-            connectionParameters.VirtualHost = "lt2";
             connectionParameters.Host = "elimaldidev";
-            connectionParameters.Username = "SAI";
-            connectionParameters.Password = "LT2";
-            connectionParameters.ExchangeName = "LaserToF";
-            connectionParameters.VirtualHost = "lt2";
-
+  
             RabbitMQConnection connection = new RabbitMQConnection();
            
             connection.Connect(connectionParameters, true);
@@ -66,14 +61,7 @@ namespace MaldiNetTests
             List<RabbitMQMessageEventArgs> messages = new List<RabbitMQMessageEventArgs>();
 
             RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
-            connectionParameters.VirtualHost = "lt2";
             connectionParameters.Host = "elimaldidev";
-            connectionParameters.Username = "SAI";
-            connectionParameters.Password = "LT2";
-            connectionParameters.ExchangeName = "LaserToF";
-            connectionParameters.VirtualHost = "lt2";
-
-            
 
             RabbitMQConnection Receiverconnection = new RabbitMQConnection();
 
@@ -83,11 +71,11 @@ namespace MaldiNetTests
 
             
             RabbitMQConnection Senderconnection = new RabbitMQConnection();
-            connectionParameters.ExchangeName = "LaserToFCommand";
+            connectionParameters.SetControlExchange();
             Senderconnection.Connect(connectionParameters, false);
 
             Assert.IsTrue( Senderconnection.SendMessage("SET TIMING GATE DELAY 2000 ns"));
-
+            Thread.Sleep(1000);
             Assert.IsTrue(Receiverconnection.isConnected());
             Assert.IsTrue(messages.Count > 0);
             Receiverconnection.Disconnect();

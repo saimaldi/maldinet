@@ -11,14 +11,9 @@ namespace MaldiNet
             Console.WriteLine("Hello World!");
             BlockingCollection<RabbitMQMessageEventArgs> messages = new BlockingCollection<RabbitMQMessageEventArgs>();
 
-            RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
-            connectionParameters.VirtualHost = "lt2";
+            RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();          
             connectionParameters.Host = "elimaldidev";
-            connectionParameters.Username = "SAI";
-            connectionParameters.Password = "LT2";
-            connectionParameters.ExchangeName = "LaserToF";
-            connectionParameters.VirtualHost = "lt2";
-
+            connectionParameters.SetReportingExchange();
             RabbitMQConnection connection = new RabbitMQConnection();
 
             connection.Connect(connectionParameters, true);

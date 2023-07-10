@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaldiNet", "MaldiNet\MaldiNet.csproj", "{F443971A-6528-4BB0-9E4B-46BB2B370ADF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaldiNetTests", "MaldiNetTests\MaldiNetTests.csproj", "{CAA4D2C4-D624-4E8D-836A-EF194C6AFCE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaldiNetTests", "MaldiNetTests\MaldiNetTests.csproj", "{CAA4D2C4-D624-4E8D-836A-EF194C6AFCE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaldiContol", "MaldiContol\MaldiContol.csproj", "{154E7B86-E715-496B-A44E-33288A66CB26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{CAA4D2C4-D624-4E8D-836A-EF194C6AFCE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAA4D2C4-D624-4E8D-836A-EF194C6AFCE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAA4D2C4-D624-4E8D-836A-EF194C6AFCE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{154E7B86-E715-496B-A44E-33288A66CB26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{154E7B86-E715-496B-A44E-33288A66CB26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{154E7B86-E715-496B-A44E-33288A66CB26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{154E7B86-E715-496B-A44E-33288A66CB26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
