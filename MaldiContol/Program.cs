@@ -56,7 +56,7 @@ namespace MaldiContol
             messageInterface = myMessageInterface;
             connection.SubscribeToNewMessages(MessageReceiver);
         }
-        
+
     }
 
     /// <summary>
@@ -111,15 +111,75 @@ namespace MaldiContol
     public class WindowsFormMessageInterface : MessageInterface
     {
         AsyncTextDisplay TextDisplay;
+        AsyncTextDisplay XMotorPositionDisplay;
+        AsyncTextDisplay YMotorPositionDisplay;
+        AsyncTextDisplay LockStatusDisplay;
+        AsyncTextDisplay PumpingStateDisplay;
 
         public WindowsFormMessageInterface(MainWindow tellme)
         {
             TextDisplay = new AsyncTextDisplay(tellme.LastMessageTextBox());
+            XMotorPositionDisplay = new AsyncTextDisplay(tellme.XMotorPositionDisplay());
+            YMotorPositionDisplay = new AsyncTextDisplay(tellme.YMotorPositionDisplay());
+            LockStatusDisplay = new  AsyncTextDisplay(tellme.LockStatusDisplay());
+            PumpingStateDisplay = new AsyncTextDisplay(tellme.PumpingStateDisplay());
+        }
+        private void ProcessStageMessage(string[] words)
+        {
+            if (words[3].Equals("POSITION"))
+            {
+                if (words[2].Equals("X"))
+                {
+                    XMotorPositionDisplay.SetText(words[4]);
+                }
+                else
+                {
+                    if (words[2].Equals("Y"))
+                    {
+                        YMotorPositionDisplay.SetText(words[4]);
+                    }
+                }
+
+
+            }
+        }
+
+        public void ProcessLockStatusMessage(String[] words)
+        {
+            LockStatusDisplay.SetText(words[2]);
+        }
+
+        private void ProcessPumpingStateMessage(String[] words)
+        { 
+            PumpingStateDisplay.SetText(words[2]);
         }
 
         public void ProcessMessage(String Message)
         {
             TextDisplay.SetText(Message);
+            var words = Message.ToUpper().Split();
+            // we look for messages of the form Stage Motor X Position interpreted_position actual_position
+            if (words.Length >= 6)
+            {
+                if (words[0].Equals("STAGE"))
+                {
+                    ProcessStageMessage(words);
+                }
+            }
+            if (words.Length > 2)
+            {
+                // LOCK STATUS STOPPED_CLOSED
+                // LOCK STATUS STOPPED_OPEN
+                if (words[0].Equals("LOCK") && words[1].Equals("STATUS"))
+                {
+                    ProcessLockStatusMessage(words);
+                }
+                //PUMPING STATE state
+                if (words[0].Equals("PUMPING") && words[1].Equals("STATE"))
+                {
+                    ProcessPumpingStateMessage(words);
+                }
+            }
         }
     }
 
@@ -170,7 +230,7 @@ namespace MaldiContol
             MaldiController controller = new MaldiController();
             mymainwindow.setMaldiControlInterface(controller);
             reader.SetMessageInterface(new WindowsFormMessageInterface(mymainwindow));
-            
+
             Application.Run(mymainwindow);
         }
     }

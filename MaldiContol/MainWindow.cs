@@ -26,6 +26,23 @@ namespace MaldiContol
         {
             return LastMessage;
         }
+        public TextBox XMotorPositionDisplay()
+        {
+            return XMotorPositionTextBox;
+        }
+        public TextBox YMotorPositionDisplay()
+        {
+            return YMotorPositionTextBox;
+        }
+        public TextBox LockStatusDisplay()
+        {
+            return LockStatusTextBox;
+        }
+
+        public TextBox PumpingStateDisplay()
+        {
+            return PumpingStateTextBox;
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {

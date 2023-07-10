@@ -49,11 +49,8 @@ namespace MaldiNet
             }
             set
             {
-                if (value != virtualHost)
-                {
-                    virtualHost = value;
-                    NotifyChanges();
-                }
+                virtualHost = value;
+                NotifyChanges();
             }
         }
 
@@ -65,11 +62,8 @@ namespace MaldiNet
             }
             set
             {
-                if (value != host)
-                {
-                    host = value;
-                    NotifyChanges();
-                }
+                host = value;
+                NotifyChanges();
             }
         }
 
@@ -81,11 +75,8 @@ namespace MaldiNet
             }
             set
             {
-                if (value != username)
-                {
-                    username = value;
-                    NotifyChanges();
-                }
+                username = value;
+                NotifyChanges();
             }
         }
 
@@ -97,11 +88,8 @@ namespace MaldiNet
             }
             set
             {
-                if (value != password)
-                {
-                    password = value;
-                    NotifyChanges();
-                }
+                password = value;
+                NotifyChanges();
             }
         }
 
@@ -113,11 +101,8 @@ namespace MaldiNet
             }
             set
             {
-                if (value != exchangeName)
-                {
-                    exchangeName = value;
-                    NotifyChanges();
-                }
+                exchangeName = value;
+                NotifyChanges();
             }
         }
 
@@ -129,11 +114,9 @@ namespace MaldiNet
             }
             set
             {
-                if (value != port)
-                {
-                    port = value;
-                    NotifyChanges();
-                }
+                port = value;
+                NotifyChanges();
+               
             }
         }
     }
@@ -168,9 +151,10 @@ namespace MaldiNet
             return true;
         }
 
-        public void Connect(RabbitMQConnectionDetails serverDetails, bool consume)
+        public bool Connect(RabbitMQConnectionDetails serverDetails, bool consume)
         {
             this.serverDetails = serverDetails;
+            bool failed = false;
 
             ConnectionFactory factory = new ConnectionFactory();
 
@@ -187,7 +171,7 @@ namespace MaldiNet
             }
             catch 
             {
-                bool failed = true;
+                 failed = true;
             }
 
             model = connection.CreateModel();
@@ -212,6 +196,7 @@ namespace MaldiNet
                 var result = model.BasicConsume(queueName, false, consumer);
             
             }
+            return failed;
         }
 
         public bool isConnected()
@@ -223,9 +208,10 @@ namespace MaldiNet
 
         private void Consumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            byte[] bytes = e.Body.ToArray();
+            String Message = Encoding.UTF8.GetString(bytes);
+            NewMessage?.Invoke(this, new RabbitMQMessageEventArgs(Message));
             model.BasicAck(e.DeliveryTag, false);
-
-            NewMessage?.Invoke(this, new RabbitMQMessageEventArgs(Encoding.UTF8.GetString(e.Body.Span)));
         }
 
         public void Disconnect()
