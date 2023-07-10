@@ -13,22 +13,13 @@ namespace MaldiNetTests
         {
         }
 
-        [Test]
-        public void Test1()
-        {
-
-            Assert.Pass();
-        }
 
         [Test]
         public void CanCreateConnectionToMaldiNotificationQueue()
         {
             RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
-            connectionParameters.VirtualHost = "lt2";
             connectionParameters.Host = "elimaldidev";
-            connectionParameters.Username = "SAI";
-            connectionParameters.Password = "LT2";
-            connectionParameters.ExchangeName = "LaserToF";
+   
 
             RabbitMQConnection connection = new RabbitMQConnection();
             connection.Connect(connectionParameters, true);
