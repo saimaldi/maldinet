@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MaldiNet\MaldiNet.csproj" />
+    <ProjectReference Include="..\MaldiRabbit\MaldiRabbit.csproj" />
   </ItemGroup>
 
 </Project>

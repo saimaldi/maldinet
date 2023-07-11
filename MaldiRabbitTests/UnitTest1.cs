@@ -1,24 +1,20 @@
-using MaldiNet;
-using NUnit.Framework;
+﻿using MaldiNet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MaldiNetTests
+namespace MaldiRabbitTests
 {
-    public class Tests
+    [TestClass]
+    public class UnitTest1
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
-
-        [Test]
+        [TestMethod]
         public void CanCreateConnectionToMaldiNotificationQueue()
         {
             RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
             connectionParameters.Host = "elimaldidev";
-   
+
 
             RabbitMQConnection connection = new RabbitMQConnection();
             connection.Connect(connectionParameters, true);
@@ -26,26 +22,25 @@ namespace MaldiNetTests
             Assert.IsTrue(connection.isConnected());
         }
 
-
-        [Test]
+        [TestMethod]
         public void CanSubscribeToMessages()
         {
             List<RabbitMQMessageEventArgs> messages = new List<RabbitMQMessageEventArgs>();
 
             RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
             connectionParameters.Host = "elimaldidev";
-  
+
             RabbitMQConnection connection = new RabbitMQConnection();
-           
+
             connection.Connect(connectionParameters, true);
-           
-            connection.SubscribeToNewMessages((object sender, RabbitMQMessageEventArgs x) => { messages.Add(x); }) ;
+
+            connection.SubscribeToNewMessages((object sender, RabbitMQMessageEventArgs x) => { messages.Add(x); });
             Thread.Sleep(10000);
             Assert.IsTrue(connection.isConnected());
             Assert.IsTrue(messages.Count > 0);
         }
 
-        [Test]
+        [TestMethod]
         public void CanSendConmmandMessages()
         {
             List<RabbitMQMessageEventArgs> messages = new List<RabbitMQMessageEventArgs>();
@@ -59,12 +54,12 @@ namespace MaldiNetTests
 
             Receiverconnection.SubscribeToNewMessages((object sender, RabbitMQMessageEventArgs x) => { messages.Add(x); });
 
-            
+
             RabbitMQConnection Senderconnection = new RabbitMQConnection();
             connectionParameters.SetControlExchange();
             Senderconnection.Connect(connectionParameters, false);
 
-            Assert.IsTrue( Senderconnection.SendMessage("SET TIMING GATE DELAY 2000 ns"));
+            Assert.IsTrue(Senderconnection.SendMessage("SET TIMING GATE DELAY 2000 ns"));
             Thread.Sleep(1000);
             Assert.IsTrue(Receiverconnection.isConnected());
             Assert.IsTrue(messages.Count > 0);
@@ -80,5 +75,6 @@ namespace MaldiNetTests
             }
             Assert.IsTrue(message_found);
         }
+
     }
 }

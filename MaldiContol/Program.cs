@@ -17,13 +17,13 @@ namespace MaldiContol
     public class MaldiReader
     {
         private MessageInterface messageInterface;
-        private BlockingCollection<RabbitMQMessageEventArgs> messages = new BlockingCollection<RabbitMQMessageEventArgs>();
         private RabbitMQConnection connection;
+
         /// <summary>
-        /// This receives the messages from the rabbitmq client
+        /// This receives the messages from the Maldireaderclass
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="messageargument"></param>
+        /// <param name="sender">unused</param>
+        /// <param name="messageargument">The message</param>
         private void MessageReceiver(object sender, RabbitMQMessageEventArgs messageargument)
         {
             messageInterface.ProcessMessage(messageargument.Message);
@@ -105,7 +105,7 @@ namespace MaldiContol
 
     /// <summary>
     /// An implementation of a MessageInterface which updates a
-    /// windows text box.  This implementation uses the AsyncTextDisplay
+    /// windows text boxes.  This implementation uses the AsyncTextDisplay
     /// to hide the windows thread marshalling complexities
     /// </summary>
     public class WindowsFormMessageInterface : MessageInterface
@@ -116,6 +116,13 @@ namespace MaldiContol
         AsyncTextDisplay LockStatusDisplay;
         AsyncTextDisplay PumpingStateDisplay;
 
+        /// <summary>
+        /// The constructor connects the dialog components 
+        /// to our internal asynctextdisplay objects.  This dialog must 
+        /// be loaded and the components must exist before it is passed to this consturctor
+        /// </summary>
+        /// <param name="tellme">The windows dialog object which contains the ui elements
+        /// </param>
         public WindowsFormMessageInterface(MainWindow tellme)
         {
             TextDisplay = new AsyncTextDisplay(tellme.LastMessageTextBox());
@@ -124,6 +131,11 @@ namespace MaldiContol
             LockStatusDisplay = new  AsyncTextDisplay(tellme.LockStatusDisplay());
             PumpingStateDisplay = new AsyncTextDisplay(tellme.PumpingStateDisplay());
         }
+
+        /// <summary>
+        /// Internal processing method for stage messages
+        /// </summary>
+        /// <param name="words">the array of words containing the message</param>
         private void ProcessStageMessage(string[] words)
         {
             if (words[3].Equals("POSITION"))
@@ -144,16 +156,32 @@ namespace MaldiContol
             }
         }
 
-        public void ProcessLockStatusMessage(String[] words)
+        /// <summary>
+        /// Internal processiong of lock status messages
+        /// </summary>
+        /// <param name="words">the array of words containing the message</param>
+        private void ProcessLockStatusMessage(String[] words)
         {
             LockStatusDisplay.SetText(words[2]);
         }
 
+        /// <summary>
+        /// Internal processiong of pumping state messages
+        /// </summary>
+        /// <param name="words">the array of words containing the message</param>
         private void ProcessPumpingStateMessage(String[] words)
         { 
             PumpingStateDisplay.SetText(words[2]);
         }
 
+        /// <summary>
+        /// The target of the subscription to incoming messages from the Maldi Instrument
+        /// 
+        /// The message is converted to a consistent case and then split into the individual words
+        /// these words are then parsed and the relevant messages are passed onto methods which 
+        /// update the ui
+        /// </summary>
+        /// <param name="Message"></param>
         public void ProcessMessage(String Message)
         {
             TextDisplay.SetText(Message);
@@ -212,7 +240,7 @@ namespace MaldiContol
 
     /// <summary>
     /// An example application which displays the maldi messages in a single line text
-    /// field
+    /// field, the lock state, pumping state and stage position
     /// </summary>
     static class Program
     {
@@ -226,11 +254,25 @@ namespace MaldiContol
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             MainWindow mymainwindow = new MainWindow();
+
+            //Create a maldi reader to receive messages from the Maldi instrument
             MaldiReader reader = new MaldiReader();
+
+            //Create a maldi reader to send control messages to the Maldi instrument
             MaldiController controller = new MaldiController();
+
+            // install the controller into the main window to enable ui object events to 
+            // send messages to the instrument
             mymainwindow.setMaldiControlInterface(controller);
+
+            //install the messaging interface into the reader, the reader will use this 
+            // interface to provide the ui with updates
+            //
+            // in this instance we create an instance of a WindowsFormMessageInterface which
+            // understands how to update the ui components of the application main window
             reader.SetMessageInterface(new WindowsFormMessageInterface(mymainwindow));
 
+            // run the application
             Application.Run(mymainwindow);
         }
     }
