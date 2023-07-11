@@ -63,7 +63,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MaldiReader.cs" />
+    <Compile Include="MessageInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MaldiController.cs" />
     <Compile Include="RabbitMQReader.cs" />
   </ItemGroup>
   <ItemGroup>
