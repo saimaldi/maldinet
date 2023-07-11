@@ -36,11 +36,11 @@ namespace MaldiContol
         /// Call SetMessageInterface to receive updates as the messages are
         /// processed.
         /// </summary>
-        public MaldiReader()
+        public MaldiReader(string hostname = "10.1.234.1")
         {
 
             RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
-            connectionParameters.Host = "elimaldidev";
+            connectionParameters.Host = hostname;
             connectionParameters.SetReportingExchange();
             connection = new RabbitMQConnection();
             connection.Connect(connectionParameters, true);
@@ -65,11 +65,11 @@ namespace MaldiContol
     public class MaldiController
     {
         private RabbitMQConnection connection;
-        public MaldiController()
+        public MaldiController(string hostname="10.1.234.1")
         {
 
             RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
-            connectionParameters.Host = "elimaldidev";
+            connectionParameters.Host = hostname;
             connectionParameters.SetControlExchange();
             connection = new RabbitMQConnection();
             connection.Connect(connectionParameters, false);
@@ -256,10 +256,10 @@ namespace MaldiContol
             MainWindow mymainwindow = new MainWindow();
 
             //Create a maldi reader to receive messages from the Maldi instrument
-            MaldiReader reader = new MaldiReader();
+            MaldiReader reader = new MaldiReader("elimaldidev");
 
             //Create a maldi reader to send control messages to the Maldi instrument
-            MaldiController controller = new MaldiController();
+            MaldiController controller = new MaldiController("elimaldidev");
 
             // install the controller into the main window to enable ui object events to 
             // send messages to the instrument
