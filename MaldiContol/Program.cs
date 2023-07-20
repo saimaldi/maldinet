@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using MaldiRabbit;
 
 namespace MaldiContol
 {
@@ -33,7 +30,7 @@ namespace MaldiContol
 
             // install the controller into the main window to enable ui object events to 
             // send messages to the instrument
-            mymainwindow.setMaldiControlInterface(controller);
+            mymainwindow.SetMaldiControlInterface(controller);
 
             //install the messaging interface into the reader, the reader will use this 
             // interface to provide the ui with updates

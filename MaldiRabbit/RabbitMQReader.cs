@@ -4,7 +4,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 
-namespace MaldiNet
+namespace MaldiRabbit
 {
     /// <summary>
     /// A collection describing the connection for the rabbitmq server
@@ -135,7 +135,7 @@ namespace MaldiNet
         RabbitMQConnectionDetails serverDetails;
         IConnection connection;
         IModel model;
-        string queueName = "";
+        readonly string queueName = "";
 
         /// <summary>
         /// Sends a message to the rabbitmq server

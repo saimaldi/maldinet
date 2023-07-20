@@ -1,4 +1,4 @@
-﻿using MaldiNet;
+﻿using MaldiRabbit;
 
 namespace MaldiContol
 {
@@ -7,8 +7,8 @@ namespace MaldiContol
     /// </summary>
     public class MaldiController
     {
-        private RabbitMQConnection connection;
-        public MaldiController(string hostname="10.1.234.1")
+        private readonly RabbitMQConnection connection;
+        public MaldiController(string hostname = "10.1.234.1")
         {
 
             RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();

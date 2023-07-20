@@ -1,6 +1,7 @@
-﻿using MaldiNet;
+﻿using MaldiContol;
+using MaldiRabbit;
 
-namespace MaldiContol
+namespace MaldiRabbit
 {
     /// <summary>
     /// This class connects to a Maldi Instrument and reads the instrument 
@@ -11,7 +12,7 @@ namespace MaldiContol
     public class MaldiReader
     {
         private MessageInterface messageInterface;
-        private RabbitMQConnection connection;
+        private readonly RabbitMQConnection connection;
 
         /// <summary>
         /// This receives the messages from the Maldireaderclass
@@ -38,6 +39,11 @@ namespace MaldiContol
             connectionParameters.SetReportingExchange();
             connection = new RabbitMQConnection();
             connection.Connect(connectionParameters, true);
+        }
+
+        public bool isConnected()
+        {
+            return connection.isConnected();
         }
 
         /// <summary>

@@ -1,14 +1,52 @@
-﻿using MaldiRabbit;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using MaldiContol;
+using MaldiRabbit;
 
-namespace MaldiContol
+namespace WPFExample
 {
     /// <summary>
-    /// An implementation of a MessageInterface which updates a
-    /// windows text boxes.  This implementation uses the AsyncTextDisplay
-    /// to hide the windows thread marshalling complexities
+    /// Create a class to hide windows crap UI architecture
     /// </summary>
-    public class WindowsFormMessageInterface : MessageInterface
+    class AsyncTextDisplay
+    {
+        private readonly TextBox TextElement;
+
+        public AsyncTextDisplay(TextBox thisText)
+        {
+            TextElement = thisText;
+        }
+        private delegate void InvokeDelegate(string message);
+
+        private void update_text(string message)
+        {
+            TextElement.Text = message;
+        }
+
+        public void SetText(string val)
+        {
+            TextElement.Dispatcher.Invoke(new InvokeDelegate(update_text), val);
+
+        }
+    }
+
+    /// <summary>
+    /// Create an instance of the Message interface to interact with the WPF gui
+    /// </summary>
+
+    public class WPFMessageInterface : MessageInterface
     {
         readonly AsyncTextDisplay TextDisplay;
         readonly AsyncTextDisplay XMotorPositionDisplay;
@@ -23,13 +61,13 @@ namespace MaldiContol
         /// </summary>
         /// <param name="tellme">The windows dialog object which contains the ui elements
         /// </param>
-        public WindowsFormMessageInterface(MainWindow tellme)
+        public WPFMessageInterface(MainWindow tellme)
         {
-            TextDisplay = new AsyncTextDisplay(tellme.LastMessageTextBox());
-            XMotorPositionDisplay = new AsyncTextDisplay(tellme.XMotorPositionDisplay());
-            YMotorPositionDisplay = new AsyncTextDisplay(tellme.YMotorPositionDisplay());
-            LockStatusDisplay = new  AsyncTextDisplay(tellme.LockStatusDisplay());
-            PumpingStateDisplay = new AsyncTextDisplay(tellme.PumpingStateDisplay());
+            TextDisplay = new AsyncTextDisplay(tellme.LastMessageTextBox);
+            XMotorPositionDisplay = new AsyncTextDisplay(tellme.XPosition);
+            YMotorPositionDisplay = new AsyncTextDisplay(tellme.YPosition);
+            LockStatusDisplay = new AsyncTextDisplay(tellme.LockStatusDisplay);
+            PumpingStateDisplay = new AsyncTextDisplay(tellme.PumpingStateDisplay);
         }
 
         /// <summary>
@@ -70,7 +108,7 @@ namespace MaldiContol
         /// </summary>
         /// <param name="words">the array of words containing the message</param>
         private void ProcessPumpingStateMessage(String[] words)
-        { 
+        {
             PumpingStateDisplay.SetText(words[2]);
         }
 
@@ -108,6 +146,39 @@ namespace MaldiContol
                     ProcessPumpingStateMessage(words);
                 }
             }
+        }
+    }
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        private readonly MaldiController controller;
+        private readonly MaldiReader reader;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            // create the maldi interface objects after the main window is constructed so that we can connec them up
+            controller = new MaldiController("elimaldidev");
+
+            //Create a maldi reader to receive messages from the Maldi instrument
+            reader = new MaldiReader("elimaldidev");
+
+            // connect the reader to the UI interface
+            reader.SetMessageInterface(new WPFMessageInterface(this));
+
+        }
+
+        private void OpenLockButtonClicked(object sender, RoutedEventArgs e)
+        {
+            controller.SampleOut();
+        }
+
+        private void CloseLockButtonClicked(object sender, RoutedEventArgs e)
+        {
+            controller.SampleIn();
         }
     }
 }

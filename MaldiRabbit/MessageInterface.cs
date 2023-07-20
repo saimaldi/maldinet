@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MaldiContol
+namespace MaldiRabbit
 {
     /// <summary>
     /// A class which provides the ProcessMessage method to receive message

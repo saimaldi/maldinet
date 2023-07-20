@@ -1,8 +1,8 @@
-﻿using MaldiNet;
+﻿using MaldiRabbit;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Threading;
+
 
 namespace MaldiRabbitTests
 {
@@ -12,13 +12,8 @@ namespace MaldiRabbitTests
         [TestMethod]
         public void CanCreateConnectionToMaldiNotificationQueue()
         {
-            RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
-            connectionParameters.Host = "elimaldidev";
-
-
-            RabbitMQConnection connection = new RabbitMQConnection();
-            connection.Connect(connectionParameters, true);
-
+            MaldiReader connection = new MaldiReader("elimaldidev");
+ 
             Assert.IsTrue(connection.isConnected());
         }
 

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MaldiContol
@@ -13,7 +6,7 @@ namespace MaldiContol
     public partial class MainWindow : Form
     {
         private MaldiController _maldiController;
-        public void setMaldiControlInterface(MaldiController UseThisInterface)
+        public void SetMaldiControlInterface(MaldiController UseThisInterface)
         {
             _maldiController = UseThisInterface;
         }

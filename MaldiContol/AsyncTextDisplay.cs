@@ -8,7 +8,7 @@ namespace MaldiContol
     /// </summary>
     class AsyncTextDisplay
     {
-        private TextBox TextElement;
+        private readonly TextBox TextElement;
 
         public AsyncTextDisplay(TextBox thisText)
         {
