@@ -9,7 +9,7 @@ namespace MaldiNet
     {
         static void Main(string[] args)
         {
-            MaldiReader maldiReader = new MaldiReader( "elimaldidev");
+            MaldiReader maldiReader = new MaldiReader( "rabbitmq-server");
             ConsoleMaldiMessageInterface messagePrinter = new ConsoleMaldiMessageInterface();
             maldiReader.SetMessageInterface(messagePrinter);
 

@@ -137,6 +137,13 @@ namespace MaldiRabbit
         IModel model;
         readonly string queueName = "";
 
+        public RabbitMQConnection()
+        {
+            connection = null;
+            model = null;
+            serverDetails = null;
+        }
+
         /// <summary>
         /// Sends a message to the rabbitmq server
         /// </summary>
@@ -144,8 +151,7 @@ namespace MaldiRabbit
         /// <returns>transmission status, false if the connection is not open</returns>
         public bool SendMessage(string ThisMessage)
         {
-            if (!model.IsOpen)
-                return false;
+            if (!isConnected()) return false;
 
             byte[] messageBodyBytes = System.Text.Encoding.UTF8.GetBytes(ThisMessage);
             model.BasicPublish(serverDetails.ExchangeName, "", null, messageBodyBytes);
@@ -162,8 +168,10 @@ namespace MaldiRabbit
         /// <returns>Connection status</returns>
         public bool Connect(RabbitMQConnectionDetails serverDetails, bool consume)
         {
+            if (isConnected()) return true;
+            if (serverDetails == null) return false;
+
             this.serverDetails = serverDetails;
-            bool failed = false;
 
             ConnectionFactory factory = new ConnectionFactory();
 
@@ -180,6 +188,8 @@ namespace MaldiRabbit
             }
             catch 
             {
+                 connection = null;
+                 model = null;
                  return false;
             }
             
@@ -206,7 +216,7 @@ namespace MaldiRabbit
                 var result = model.BasicConsume(queueName, false, consumer);
             
             }
-            return failed;
+            return true;
         }
 
         /// <summary>
@@ -215,7 +225,10 @@ namespace MaldiRabbit
         /// <returns>True if connected, false if not</returns>
         public bool isConnected()
         {
-            return connection.IsOpen;
+            if (connection == null) return false;
+            if (model == null) return false;
+
+            return connection.IsOpen && model.IsOpen;
         }
 
         public event EventHandler<RabbitMQMessageEventArgs> NewMessage;
