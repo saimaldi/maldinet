@@ -161,10 +161,10 @@ namespace WPFExample
             InitializeComponent();
 
             // create the maldi interface objects after the main window is constructed so that we can connec them up
-            controller = new MaldiController("elimaldidev");
+            controller = new MaldiController("rabbitmq-server");
 
             //Create a maldi reader to receive messages from the Maldi instrument
-            reader = new MaldiReader("elimaldidev");
+            reader = new MaldiReader("rabbitmq-server");
 
             // connect the reader to the UI interface
             reader.SetMessageInterface(new WPFMessageInterface(this));

@@ -8,14 +8,24 @@ namespace MaldiContol
     public class MaldiController
     {
         private readonly RabbitMQConnection connection;
+        private readonly RabbitMQConnectionDetails connectionParameters;
+
+        public void Connect()
+        {
+            if (IsConnected()) return;
+
+            connection.Connect(connectionParameters, false);
+        }
+
         public MaldiController(string hostname = "10.1.234.1")
         {
 
-            RabbitMQConnectionDetails connectionParameters = new RabbitMQConnectionDetails();
+            connectionParameters = new RabbitMQConnectionDetails();
             connectionParameters.Host = hostname;
             connectionParameters.SetControlExchange();
             connection = new RabbitMQConnection();
-            connection.Connect(connectionParameters, false);
+            Connect();
+            
         }
 
         /// <summary>
@@ -34,6 +44,12 @@ namespace MaldiContol
         public void SampleIn()
         {
             connection.SendMessage("SET PUMPINGSTATE LOCK_PUMPDOWN");
+        }
+
+        public bool IsConnected()
+        {
+            if (connection == null) return false;
+            return connection.isConnected();
         }
     }
 }
